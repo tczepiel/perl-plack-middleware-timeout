@@ -1,12 +1,12 @@
 package Plack::Middleware::Timeout;
 
 use parent 'Plack::Middleware';
-use Plack::Util::Accessor qw(timeout);
+use Plack::Util::Accessor qw(timeout response);
 use Plack::Request;
 use Plack::Response;
 use Scope::Guard ();
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub call {
     my ( $self, $env ) = @_;
@@ -30,14 +30,18 @@ sub call {
     } or do {
         my $request        = Plack::Request->new($env);
         my $execution_time = time() - $time_started;
-        warn
-          sprintf
+        warn sprintf
           "Terminated request for uri '%s' - took %d seconds (timeout %ds)",
           $request->request_uri,
           $execution_time,
           $self->timeout;
 
-        return Plack::Response->new(408)->finalize;
+        my $response = Plack::Response->new(408);
+        if ( my $build_response_coderef = $self->response ) {
+            $build_response_coderef->($response);
+        }
+
+        return $response->finalize;
     };
 }
 
@@ -55,7 +59,12 @@ Plack::Middleware::Timeout
 
     Plack::Middleeare::Timeout->wrap(
         $app,
-        timeout => 60,
+        timeout  => 60,
+        response => sub { # do something special with response object
+            my $plack_response = shift;
+            ...;
+            return $plack_response;
+        }
     );
 
 =head1 DESCRIPTION
