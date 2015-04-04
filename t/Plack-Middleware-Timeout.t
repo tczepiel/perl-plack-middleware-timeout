@@ -5,7 +5,6 @@ use Plack::Middleware::Timeout;
 use Test::More qw(no_plan);
 use Plack::Test;
 use HTTP::Request::Common;
-use Data::Dumper;
 
 my $app = sub { return [ 200, [], [ "Hello "] ] };
 my $timeout_app = sub { sleep 5; return [ 200, [], "Hello" ] };
