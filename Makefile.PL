@@ -9,7 +9,7 @@ WriteMakefile(
     PREREQ_PM         => {
         'Scope::Guard' => 0,
     },
-    ABSTRACT_FROM     => 'lib/Plack/Middleware/Timeout.pm',
+    ABSTRACT          => 'Timeout long running requests',
     AUTHOR            => 'Tomasz Czepiel <tjmc@cpan.org>',
     LICENSE           => 'perl',
 );

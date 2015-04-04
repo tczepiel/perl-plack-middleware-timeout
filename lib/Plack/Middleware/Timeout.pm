@@ -39,3 +39,32 @@ sub call {
 }
 
 1;
+
+__END__
+
+=head1 NAME 
+
+Plack::Middleware::Timeout
+
+=head1 SYNOPSIS
+
+    my $app = sub { ... };
+
+    Plack::Middleeare::Timeout->wrap(
+        $app,
+        timeout => 60,
+    );
+
+=head1 DESCRIPTION
+
+Timeout any plack requests at an arbitrary time.
+
+=head1 AUTHOR
+
+Tomasz Czepiel 
+
+=head1 LICENCE 
+
+This library is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
