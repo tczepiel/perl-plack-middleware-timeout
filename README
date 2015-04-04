@@ -1,4 +1,4 @@
-Plack-Middleware-Timeout version 0.01
+Plack-Middleware-Timeout version 0.02
 =====================================
 
 INSTALLATION
@@ -9,6 +9,24 @@ To install this module type the following:
    make
    make test
    make install
+
+SYNOPSIS
+
+    my $app = sub { ... };
+
+    Plack::Middleeare::Timeout->wrap(
+        $app,
+        timeout  => 60,
+        response => sub { # do something special with response object
+            my $plack_response = shift;
+            ...;
+            return $plack_response;
+        }
+    );
+
+DESCRIPTION
+
+Timeout any plack requests at an arbitrary time.
 
 DEPENDENCIES
 
