@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Plack::Middleware::Timeout;
-use Test::More qw(no_plan);
+use Test::More tests => 3;
 use Plack::Test;
 use HTTP::Request::Common;
 
@@ -30,6 +30,6 @@ $timeout_app = Plack::Middleware::Timeout->wrap(
 test_psgi $timeout_app, sub {
     my $cb  = shift;
     my $res = $cb->( GET "/" );
-    is $res->code, 408, "request looks ok";
+    is $res->code, 408, "response code ok";
     is $res->content, "the request timed out", 'response body looks ok';
 };

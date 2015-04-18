@@ -6,7 +6,7 @@ use Plack::Request;
 use Plack::Response;
 use Scope::Guard ();
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 sub call {
     my ( $self, $env ) = @_;
@@ -19,11 +19,9 @@ sub call {
 
         $time_started = time();
         alarm( $self->timeout || 120 );
-        my $guard = Scope::Guard->new(
-            sub {
-                alarm 0;
-            }
-        );
+        my $guard = Scope::Guard->new(sub {
+            alarm 0;
+        });
 
         return $self->app->($env);
 
