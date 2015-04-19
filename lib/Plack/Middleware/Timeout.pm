@@ -58,9 +58,14 @@ Plack::Middleware::Timeout
     Plack::Middleeare::Timeout->wrap(
         $app,
         timeout  => 60,
-        response => sub { # do something special with response object
+        # optional callback to set the custom response 
             my $plack_response = shift;
-            ...;
+
+            $response->code(HTTP_REQUEST_TIMEOUT);
+            $response->body( encode_json({
+                timeout => 1,
+                other_info => {...},
+            }));
             return $plack_response;
         }
     );
