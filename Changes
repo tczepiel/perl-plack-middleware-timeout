@@ -7,5 +7,6 @@ Revision history for Perl extension Plack::Middleware::Timeout.
     - added more options for defining custom responses
 
 0.03 2015-04-19
-    - more tests, documentation improvements
+    - documentation update
+
 
