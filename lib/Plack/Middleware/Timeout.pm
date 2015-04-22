@@ -76,7 +76,7 @@ Timeout any plack requests at an arbitrary time.
 
 =head1 AUTHOR
 
-Tomasz Czepiel 
+Tomasz Czepiel <tjmc@cpan.org>
 
 =head1 LICENCE 
 
