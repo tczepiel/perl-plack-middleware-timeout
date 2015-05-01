@@ -32,6 +32,8 @@ DEPENDENCIES
 
 Scope::Guard
 
+Time::HiRes
+
 COPYRIGHT AND LICENCE
 
 Put the correct copyright and licence information here.

@@ -5,8 +5,9 @@ use Plack::Util::Accessor qw(timeout response);
 use Plack::Request;
 use Plack::Response;
 use Scope::Guard ();
+use Time::HiRes qw(alarm);
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 sub call {
     my ( $self, $env ) = @_;

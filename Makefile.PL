@@ -8,6 +8,7 @@ WriteMakefile(
     PREREQ_PM    => {
         'Scope::Guard' => 0,
         Plack          => 0,
+        'Time::HiRes'  => 0,
     },
     BUILD_REQUIRES => {
         'Test::More'    => 0,

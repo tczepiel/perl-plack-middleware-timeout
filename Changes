@@ -9,4 +9,7 @@ Revision history for Perl extension Plack::Middleware::Timeout.
 0.03 2015-04-19
     - documentation update
 
+0.04 2015-05-01
+    - import Time::HiRes for greater accuracy
+
 
