@@ -5,9 +5,16 @@ use Plack::Util::Accessor qw(timeout response);
 use Plack::Request;
 use Plack::Response;
 use Scope::Guard ();
-use Time::HiRes qw(alarm);
+use Time::HiRes qw(alarm time);
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
+
+sub _get_alarm_subref {
+    my $self = shift;
+
+   my $timeout = $self->timeout || 120;
+   return ref($timeout) eq 'CODE' ? $timeout : sub { alarm($timeout) };
+}
 
 sub call {
     my ( $self, $env ) = @_;
@@ -19,7 +26,8 @@ sub call {
     eval {
 
         $time_started = time();
-        alarm( $self->timeout || 120 );
+        $self->_get_alarm_subref->();
+
         my $guard = Scope::Guard->new(sub {
             alarm 0;
         });
@@ -58,7 +66,7 @@ Plack::Middleware::Timeout
 
     Plack::Middleeare::Timeout->wrap(
         $app,
-        timeout  => 60,
+        timeout  => sub { ... } || 60,
         # optional callback to set the custom response 
             my $plack_response = shift;
 

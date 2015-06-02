@@ -12,4 +12,9 @@ Revision history for Perl extension Plack::Middleware::Timeout.
 0.04 2015-05-01
     - import Time::HiRes for greater accuracy
 
+0.05 2015-06-02 
+    - allow providing a coderef as a timeout, in case the user
+      wants to have even more control over that.
+    - use sub time() from Time::HiRes for measuring how long the request took.
+
 
