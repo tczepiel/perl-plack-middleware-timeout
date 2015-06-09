@@ -17,4 +17,12 @@ Revision history for Perl extension Plack::Middleware::Timeout.
       wants to have even more control over that.
     - use sub time() from Time::HiRes for measuring how long the request took.
 
+0.06 2015-06-09
+    - make the warning more concise but emit it only if no default response handling sub is provided
+    - fixed bugx in synopsis
+    - documented the params accepted by the middleware
+    - updated Changes and README files
+
+
+
 

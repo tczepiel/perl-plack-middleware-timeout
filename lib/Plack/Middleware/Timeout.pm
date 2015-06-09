@@ -106,7 +106,6 @@ to fit our needs, if none is provided the middleware resolves to emitting a warn
 
 =back
 
-
 =head1 AUTHOR
 
 Tomasz Czepiel <tjmc@cpan.org>

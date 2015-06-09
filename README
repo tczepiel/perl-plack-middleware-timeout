@@ -1,47 +1,46 @@
-Plack-Middleware-Timeout version 0.02
-=====================================
-
-INSTALLATION
-
-To install this module type the following:
-
-   perl Makefile.PL
-   make
-   make test
-   make install
+NAME
+    Plack::Middleware::Timeout
 
 SYNOPSIS
+        my $app = sub { ... };
 
-    my $app = sub { ... };
+        Plack::Middleeare::Timeout->wrap(
+            $app,
+            timeout  => sub { ... } || 60,
+            # optional callback to set the custom response 
+            response => sub {
+                my ($response_obj,$execution_time) = @_;
 
-    Plack::Middleeare::Timeout->wrap(
-        $app,
-        timeout  => 60,
-        response => sub { # do something special with response object
-            my $plack_response = shift;
-            ...;
-            return $plack_response;
-        }
-    );
+                $response_obj->code(HTTP_REQUEST_TIMEOUT);
+                $response_obj->body( encode_json({
+                    timeout => 1,
+                    other_info => {...},
+                }));
+
+                return $plack_response;
+            }
+        );
 
 DESCRIPTION
+    Timeout any plack requests at an arbitrary time.
 
-Timeout any plack requests at an arbitrary time.
+PARAMETERS
+    timeout
+        Determines how we're going to get the timeout value, either subref
+        returning a value or any value accepted by subroutine defined in
+        Time::HiRes::alarm, default 120 seconds.
 
-DEPENDENCIES
+    response
+        Optional subroutine that receives two parameters, a Plack::Response
+        object that we can further modify to fit our needs, if none is
+        provided the middleware resolves to emitting a warning:
 
-Scope::Guard
+            'Terminated request for uri '%s' due to timeout %ds'
 
-Time::HiRes
+AUTHOR
+    Tomasz Czepiel <tjmc@cpan.org>
 
-COPYRIGHT AND LICENCE
-
-Put the correct copyright and licence information here.
-
-Copyright (C) 2015 by Tomasz Czepiel
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself, either Perl version 5.20.1 or,
-at your option, any later version of Perl 5 you may have available.
-
+LICENCE
+    This library is free software; you can redistribute it and/or modify it
+    under the same terms as Perl itself.
 
