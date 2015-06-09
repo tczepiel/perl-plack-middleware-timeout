@@ -44,7 +44,7 @@ sub call {
         else {
             # warn by default, so there's a trace of the timeout left somewhere
             warn sprintf
-              "Terminated request for uri '%s' due to timeout %ds",
+              "Terminated request for uri '%s' due to timeout (%ds)",
               $self->timeout;
         }
 
@@ -100,7 +100,7 @@ to fit our needs, if none is provided the middleware resolves to emitting a warn
 
 =over
 
-'Terminated request for uri '%s' due to timeout %ds'
+'Terminated request for uri '%s' due to timeout (%ds)'
 
 =back
 

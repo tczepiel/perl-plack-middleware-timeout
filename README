@@ -35,7 +35,7 @@ PARAMETERS
         object that we can further modify to fit our needs, if none is
         provided the middleware resolves to emitting a warning:
 
-            'Terminated request for uri '%s' due to timeout %ds'
+            'Terminated request for uri '%s' due to timeout (%ds)'
 
 AUTHOR
     Tomasz Czepiel <tjmc@cpan.org>
