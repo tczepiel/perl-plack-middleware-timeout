@@ -9,7 +9,7 @@ use HTTP::Request::Common;
 my $app = sub { return [ 200, [], ["Hello "] ] };
 my $timeout_app = sub { sleep 5; return [ 200, [], "Hello" ] };
 
-$app = Plack::Middleware::Timeout->wrap( $app, timeout => 2 );
+$app = Plack::Middleware::Timeout->wrap( $app, timeout => 4 );
 
 test_psgi $app, sub {
     my $cb  = shift;
@@ -20,7 +20,7 @@ test_psgi $app, sub {
 {
     my $timeout_app = Plack::Middleware::Timeout->wrap(
         $timeout_app,
-        timeout  => 2,
+        timeout  => 4,
         response => sub {
             my $plack_response = shift;
             $plack_response->body('the request timed out');
@@ -28,6 +28,7 @@ test_psgi $app, sub {
         },
     );
 
+    diag("waiting for the timeout alarm() to trigger...");
     test_psgi $timeout_app, sub {
         my $cb  = shift;
         my $res = $cb->( GET "/" );
@@ -39,10 +40,13 @@ test_psgi $app, sub {
 
 {
     my $timeout_app =
-      Plack::Middleware::Timeout->wrap( $timeout_app, timeout => 2, );
+      Plack::Middleware::Timeout->wrap( $timeout_app, timeout => 4 );
 
     my $warning_caught;
     local $SIG{__WARN__} = sub { ($warning_caught) = @_; };
+
+    diag("waiting for the timeout alarm() to trigger...");
+
     test_psgi $timeout_app, sub {
         my $cb  = shift;
         my $res = $cb->( GET "/" );
