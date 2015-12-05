@@ -37,6 +37,20 @@ PARAMETERS
 
             'Terminated request for uri '%s' due to timeout (%ds)'
 
+    soft_timeout
+        Same as timeout, except this value will be checked after the call to
+        the app has completed. See also "on_soft_timeout" below.
+
+    on_soft_timeout
+        optional coderef that'll get executed when we established, that time
+        required to serve the response was longer than a value provided in the
+        soft_timeout parameter. If soft_timeout is set but no on_soft_timeout
+        coderef is provided, we're going to issue a warning as follows; the
+        response will be returned as normal.
+
+            'Soft timeout reached for uri '%s' (soft timeout: %ds) request
+            took %ds'
+
 AUTHOR
     Tomasz Czepiel <tjmc@cpan.org>
 

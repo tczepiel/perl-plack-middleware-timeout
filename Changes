@@ -23,6 +23,8 @@ Revision history for Perl extension Plack::Middleware::Timeout.
     - documented the params accepted by the middleware
     - updated Changes and README files
 
+0.07 2015-12-06
+    - added the soft timeout feature.
 
 
 
