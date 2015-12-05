@@ -2,20 +2,27 @@ use strict;
 use warnings;
 
 use Plack::Middleware::Timeout;
-use Test::More tests => 5;
+use Test::More tests => 6;
 use Plack::Test;
 use HTTP::Request::Common;
 
-my $app = sub { return [ 200, [], ["Hello "] ] };
+my $app = sub { sleep 2; return [ 200, [], ["Hello "] ] };
 my $timeout_app = sub { sleep 5; return [ 200, [], "Hello" ] };
 
-$app = Plack::Middleware::Timeout->wrap( $app, timeout => 4 );
+{
+    $app = Plack::Middleware::Timeout->wrap( $app, timeout => 4, soft_timeout => 1 );
+    my $warning_caught;
+    local $SIG{__WARN__} = sub { ($warning_caught) = @_; };
 
-test_psgi $app, sub {
-    my $cb  = shift;
-    my $res = $cb->( GET "/" );
-    is $res->code, 200, "response looks ok";
-};
+    test_psgi $app, sub {
+        my $cb  = shift;
+        my $res = $cb->( GET "/" );
+        is $res->code, 200, "response looks ok";
+
+        like $warning_caught, qr/Soft timeout reached/,
+          'warning caught matches the default warning';
+    };
+}
 
 {
     my $timeout_app = Plack::Middleware::Timeout->wrap(
@@ -29,6 +36,7 @@ test_psgi $app, sub {
     );
 
     diag("waiting for the timeout alarm() to trigger...");
+
     test_psgi $timeout_app, sub {
         my $cb  = shift;
         my $res = $cb->( GET "/" );
