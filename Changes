@@ -19,7 +19,7 @@ Revision history for Perl extension Plack::Middleware::Timeout.
 
 0.06 2015-06-15
     - make the warning more concise but emit it only if no default response handling sub is provided
-    - fixed bugx in synopsis
+    - fixed bugs in synopsis
     - documented the params accepted by the middleware
     - updated Changes and README files
 
