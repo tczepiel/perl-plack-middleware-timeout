@@ -99,7 +99,7 @@ Plack::Middleware::Timeout
 
     Plack::Middleeare::Timeout->wrap(
         $app,
-        timeout  => sub { ... } || 60,
+        timeout  => sub { ... } || 120,
         # optional callback to set the custom response 
         response => sub {
             my ($response_obj,$execution_time) = @_;
