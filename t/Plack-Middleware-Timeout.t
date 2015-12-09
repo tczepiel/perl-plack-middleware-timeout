@@ -2,15 +2,15 @@ use strict;
 use warnings;
 
 use Plack::Middleware::Timeout;
-use Test::More tests => 6;
+use Test::More tests => 9;
 use Plack::Test;
 use HTTP::Request::Common;
 
-my $app = sub { sleep 2; return [ 200, [], ["Hello "] ] };
+my $app = sub { sleep 2; return [ 200, [], ["Hello"] ] };
 my $timeout_app = sub { sleep 5; return [ 200, [], "Hello" ] };
 
 {
-    $app = Plack::Middleware::Timeout->wrap( $app, timeout => 4, soft_timeout => 1 );
+    my $app = Plack::Middleware::Timeout->wrap( $app, timeout => 4, soft_timeout => 1 );
     my $warning_caught;
     local $SIG{__WARN__} = sub { ($warning_caught) = @_; };
 
@@ -61,5 +61,21 @@ my $timeout_app = sub { sleep 5; return [ 200, [], "Hello" ] };
         is $res->code, 408, "response code ok";
         like $warning_caught, qr/due to timeout \(\d+s\)/,
           'warning caught matches the default warning';
+    };
+}
+
+{
+    #  no timeout reached, no soft timeout reached
+    my $app = Plack::Middleware::Timeout->wrap($app, timeout => 4, soft_timeout => 3 );
+    my $warning_caught = undef;
+    local $SIG{__WARN__} = sub { ($warning_caught) = @_; };
+
+    test_psgi $app => sub {
+        my $cb = shift;
+        my $res = $cb->( GET "/" );
+        is $res->code, 200, "response looks ok";
+        is $res->decoded_content, "Hello", "response body looks ok";
+
+        is($warning_caught, undef, "no warning was emitted");
     };
 }
