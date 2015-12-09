@@ -128,9 +128,7 @@ Numeric value accepted by subroutine defined in Time::HiRes::alarm, default 120 
 
 =item response
 
-Optional subroutine which will be exeuted when timeout is reached.
-The subref receives a Plack::Response object as its argument. If the response subref isn't defined,we resolve to 
-emitting a warning:
+Optional subroutine which will be exeuted when timeout is reached. The subref receives a Plack::Response object and time it took to run as its arguments. If the response subref isn't defined, we resolve to emitting a warning: 
 
 =over
 
