@@ -6,14 +6,20 @@ use Plack::Request;
 use Plack::Response;
 use Scope::Guard ();
 use Time::HiRes qw(alarm time);
+use Carp qw(croak);
 
 our $VERSION = '0.07';
 
-sub _get_alarm_subref {
+sub prepare_app {
     my $self = shift;
 
-   my $timeout = $self->timeout || 120;
-   return ref($timeout) eq 'CODE' ? $timeout : sub { alarm($timeout) };
+    $self->timeout(120) unless $self->timeout;
+
+    for my $param (qw(response on_soft_timeout)) {
+        next unless defined $self->$param;
+        croak "parameter $param isn't a CODE reference!"
+          unless ref( $self->$param ) eq 'CODE';
+    }
 }
 
 my $default_on_soft_timeout = sub {
@@ -31,7 +37,7 @@ sub call {
     eval {
 
         $time_started = time();
-        $self->_get_alarm_subref->();
+        alarm($self->timeout);
 
         my $guard = Scope::Guard->new(sub {
             alarm 0;
@@ -118,12 +124,13 @@ Timeout any plack requests at an arbitrary time.
 
 =item timeout
 
-Determines how we're going to get the timeout value, either subref returning a value or any value accepted by subroutine defined in Time::HiRes::alarm, default 120 seconds.
+Numeric value accepted by subroutine defined in Time::HiRes::alarm, default 120 seconds.
 
 =item response
 
-Optional subroutine that receives two parameters, a Plack::Response object that we can further modify 
-to fit our needs, if none is provided the middleware resolves to emitting a warning:
+Optional subroutine which will be exeuted when timeout is reached.
+The subref receives a Plack::Response object as its argument. If the response subref isn't defined,we resolve to 
+emitting a warning:
 
 =over
 
