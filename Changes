@@ -1,6 +1,6 @@
 Revision history for Perl extension Plack::Middleware::Timeout.
 
-0.09 2017
+0.09 2017-09-02
 	- corrected the documentation
 	- using a better default response code 504 Gateway Timeout, 408 Request Timeout
 	  was misleading, as it's definition is explicitly indicating a client error.
