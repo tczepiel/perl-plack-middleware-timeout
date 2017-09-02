@@ -28,5 +28,8 @@ Revision history for Perl extension Plack::Middleware::Timeout.
     - simplify the handling of the timeout value, it now only accepts scalar values.
     - updated documentation.
 
+0.08 2015-12-10
+    - updated documentation
+    - use strictures and warnings.
 
 
