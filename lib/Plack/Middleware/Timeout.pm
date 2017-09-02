@@ -7,8 +7,9 @@ use Plack::Response;
 use Scope::Guard ();
 use Time::HiRes qw(alarm time);
 use Carp qw(croak);
+use HTTP::Status qw(HTTP_GATEWAY_TIMEOUT);
 
-our $VERSION = '0.07';
+our $VERSION = '0.09';
 
 sub prepare_app {
     my $self = shift;
@@ -69,7 +70,7 @@ sub call {
     } or do {
         my $request        = Plack::Request->new($env);
 
-        my $response = Plack::Response->new(408);
+        my $response = Plack::Response->new(HTTP_GATEWAY_TIMEOUT);
         if ( my $build_response_coderef = $self->response ) {
             $build_response_coderef->($response,$execution_time);
         }
@@ -99,7 +100,7 @@ Plack::Middleware::Timeout
 
     Plack::Middleeare::Timeout->wrap(
         $app,
-        timeout  => sub { ... } || 120,
+        timeout  => 120,
         # optional callback to set the custom response 
         response => sub {
             my ($response_obj,$execution_time) = @_;
@@ -124,7 +125,7 @@ Timeout any plack requests at an arbitrary time.
 
 =item timeout
 
-Numeric value accepted by subroutine defined in Time::HiRes::alarm, default 120 seconds.
+Numeric value accepted by subroutine defined in Time::HiRes::alarm, default: 120 seconds.
 
 =item response
 
@@ -135,6 +136,8 @@ Optional subroutine which will be exeuted when timeout is reached. The subref re
 'Terminated request for uri '%s' due to timeout (%ds)'
 
 =back
+
+and return a response code 504 (HTTP_GATEWAY_TIMEOUT).
 
 =item soft_timeout
 
