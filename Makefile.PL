@@ -11,6 +11,7 @@ WriteMakefile(
         'Time::HiRes'  => 0,
         'Test::More'    => 0,
         'HTTP::Message' => 0,
+        'Try::Tiny'     => 0,
     },
     BUILD_REQUIRES => {
         'Test::More'    => 0,
