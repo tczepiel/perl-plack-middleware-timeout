@@ -8,6 +8,7 @@ use Plack::Request;
 use Plack::Response;
 use Scope::Guard ();
 use Time::HiRes qw(alarm time);
+use Try::Tiny;
 use Carp qw(croak);
 use HTTP::Status qw(HTTP_GATEWAY_TIMEOUT);
 
@@ -36,9 +37,8 @@ sub call {
     local $SIG{ALRM} = sub { die $alarm_msg };
 
     my $time_started = 0;
-    local $@;
-    eval {
 
+    try {
         $time_started = time();
         alarm($self->timeout);
 
@@ -68,7 +68,13 @@ sub call {
 
         return $self->app->($env);
 
-    } or do {
+    } catch {
+        if ( time() - $time_started < $self->timeout ) {
+          # It's not a timeout. The underlying code errored out.
+          # Let other middlewares handle it.
+          die $_;
+        }
+
         my $request        = Plack::Request->new($env);
 
         my $response = Plack::Response->new(HTTP_GATEWAY_TIMEOUT);
